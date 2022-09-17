@@ -9,6 +9,8 @@ use DNT\LaravelModule\Enums\ModuleStatus;
 use Illuminate\Support\Manager;
 
 /**
+ * @method enable(ModuleContract|string $module):void
+ * @method disable(ModuleContract|string $module):void
  * @method isStatus(ModuleContract|string $module, ModuleStatus|string $status):bool
  * @method getStatus():ModuleStatus
  */

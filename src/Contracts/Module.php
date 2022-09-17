@@ -17,4 +17,8 @@ interface Module
     public function getPath(): string;
 
     public function status(ModuleStatus $status = null): bool|ModuleStatus;
+
+    public function enable(): void;
+
+    public function disable(): void;
 }

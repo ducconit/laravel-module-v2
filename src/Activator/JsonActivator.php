@@ -19,20 +19,35 @@ class JsonActivator implements ModuleActivator
         $this->jsonable = $jsonable;
     }
 
+    public function enable(Module|string $module): void
+    {
+        if ($this->isStatus($module, ModuleStatus::ENABLE)) {
+            return;
+        }
+        $moduleID = $this->getModuleID($module);
+        $this->jsonable->set($moduleID, true)->save();
+    }
+
     public function isStatus(Module|string $module, ModuleStatus $status): bool
     {
         $moduleID = $this->getModuleID($module);
         return $this->getStatus($moduleID) == $status;
     }
 
-    public function getModuleID(Module|string $module): string
-    {
-        return $module instanceof Module ? $module->id() : $module;
-    }
-
     public function getStatus(Module|string $module): ModuleStatus
     {
         $moduleID = $this->getModuleID($module);
         return ModuleStatus::from((int)$this->jsonable->get($moduleID, false));
+    }
+
+    public function disable(Module|string $module): void
+    {
+        $moduleID = $this->getModuleID($module);
+        $this->jsonable->set($moduleID, false)->save();
+    }
+
+    public function getModuleID(Module|string $module): string
+    {
+        return $module instanceof Module ? $module->id() : $module;
     }
 }

@@ -48,11 +48,25 @@ class Module implements Contract
         return $this->jsonable->get('version', 'dev');
     }
 
+    public function disable(): void
+    {
+        if ($this->status(ModuleStatus::ENABLE)) {
+            $this->activator->disable($this);
+        }
+    }
+
     public function status(ModuleStatus $status = null): bool|ModuleStatus
     {
         if (is_null($status)) {
             return $this->activator->getStatus();
         }
         return $this->activator->isStatus($this, $status);
+    }
+
+    public function enable(): void
+    {
+        if ($this->status(ModuleStatus::DISABLE)) {
+            $this->activator->enable($this);
+        }
     }
 }
