@@ -9,12 +9,25 @@ use DNT\LaravelModule\Support\Loader;
 use DNT\LaravelModule\Support\ProviderRepository as LocalProviderRepository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\ProviderRepository;
+use Illuminate\Support\Facades\App;
 
 class LaravelModuleServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         $this->publishesConfig();
+    }
+
+    private function publishesConfig()
+    {
+        $this->publishes([
+            $this->getConfigPath() => App::configPath('module.php')
+        ], 'config');
+    }
+
+    private function getConfigPath(): string
+    {
+        return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php';
     }
 
     private function registerProviders()
@@ -27,7 +40,7 @@ class LaravelModuleServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->getConfigPath(), 'module');
 
         $this->app->singleton(ModuleLoader::class, function ($app) {
-            $path = $app->make('config')->get('module.base_path', base_path('modules'));
+            $path = $app->make('config')->get('module.base_path', $app->basePath('modules'));
             $filesystem = $app->make('files');
             return new Loader($app, $filesystem, $path);
         });
@@ -38,11 +51,6 @@ class LaravelModuleServiceProvider extends ServiceProvider
 
         $this->registerProviders();
         $this->loadAndRegisterModules();
-    }
-
-    private function getConfigPath(): string
-    {
-        return dirname(__DIR__) . DIRECTORY_SEPARATOR . 'config.php';
     }
 
     private function loadAndRegisterModules()
@@ -77,13 +85,6 @@ class LaravelModuleServiceProvider extends ServiceProvider
             $filesystem,
             $this->getCachedModulesPath($moduleID)
         );
-    }
-
-    private function publishesConfig()
-    {
-        $this->publishes([
-            $this->getConfigPath() => config_path('module.php')
-        ], 'config');
     }
 
 }
