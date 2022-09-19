@@ -70,9 +70,14 @@ class Loader implements Contract
         $modules = [];
         $scanPaths = $this->getScanPaths();
         foreach ($scanPaths as $path) {
-            $files = $this->files->glob($path . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "module.json");
+            $files = $this->files->glob(
+                $path . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "*" . DIRECTORY_SEPARATOR . "module.json"
+            );
             foreach ($files as $file) {
-                $modules[] = $this->addModule($file);
+                $module = $this->addModule($file);
+                if ($module->id()) {
+                    $modules[] = $module;
+                }
             }
         }
 

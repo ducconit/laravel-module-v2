@@ -40,7 +40,7 @@ class LaravelModuleServiceProvider extends ServiceProvider
         $this->mergeConfigFrom($this->getConfigPath(), 'module');
 
         $this->app->singleton(ModuleLoader::class, function ($app) {
-            $path = $app->make('config')->get('module.base_path', $app->basePath('modules'));
+            $path = $app->make('config')->get('module.base_path', $app->basePath('vendor'));
             $filesystem = $app->make('files');
             return new Loader($app, $filesystem, $path);
         });
