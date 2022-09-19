@@ -1,0 +1,9 @@
+{
+  "id": "id-module",
+  "name": "name module",
+  "version": "v1.0",
+  "description": "description",
+  "providers": [
+    "Vendor\\Package\\Provider"
+  ]
+}

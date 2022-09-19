@@ -23,7 +23,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Tests\\": "tests/"
+      "Tests\\": "tests/",
+      "Vendor\\": "mocks/vendor/"
     }
   },
   "config": {
@@ -35,5 +36,14 @@
         "DNT\\LaravelModule\\Providers\\LaravelModuleServiceProvider"
       ]
     }
+  },
+  "require-dev": {
+    "orchestra/testbench": "*"
+  },
+  "scripts": {
+    "post-autoload-dump": [
+      "@php ./vendor/bin/testbench package:discover --ansi"
+    ],
+    "test": "./vendor/bin/phpunit"
   }
 }
