@@ -23,29 +23,14 @@ class Module implements Contract
         return new static($activator, $jsonable);
     }
 
-    public function name(): string
-    {
-        return $this->jsonable->get('name');
-    }
-
     public function getPath(): string
     {
         return $this->jsonable->getPath();
     }
 
-    public function id(): string
-    {
-        return $this->jsonable->get('id');
-    }
-
     public function providers(): array
     {
         return $this->jsonable->get('providers', []);
-    }
-
-    public function version(): string
-    {
-        return $this->jsonable->get('version', 'dev');
     }
 
     public function disable(): void
@@ -68,5 +53,25 @@ class Module implements Contract
         if ($this->status(ModuleStatus::DISABLE)) {
             $this->activator->enable($this);
         }
+    }
+
+    public function isValid(): bool
+    {
+        return $this->id() && $this->name() && $this->version();
+    }
+
+    public function id(): string
+    {
+        return $this->jsonable->get('id');
+    }
+
+    public function name(): string
+    {
+        return $this->jsonable->get('name');
+    }
+
+    public function version(): string
+    {
+        return $this->jsonable->get('version', 'dev');
     }
 }

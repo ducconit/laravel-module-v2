@@ -21,4 +21,6 @@ interface Module
     public function enable(): void;
 
     public function disable(): void;
+
+    public function isValid(): bool;
 }

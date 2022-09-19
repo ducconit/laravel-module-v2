@@ -24,4 +24,6 @@ interface ModuleLoader
     public function getScanPaths(): array;
 
     public function appendScanPath(string $path): void;
+
+    public function findModule(ModuleContract|string $module): ModuleContract;
 }

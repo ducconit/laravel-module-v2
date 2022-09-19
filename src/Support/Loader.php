@@ -6,6 +6,7 @@ use DNT\Json\Json;
 use DNT\LaravelModule\Contracts\Module as ModuleContract;
 use DNT\LaravelModule\Contracts\ModuleLoader as Contract;
 use DNT\LaravelModule\Enums\ModuleStatus;
+use DNT\LaravelModule\Exceptions\ModuleNotFound;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
@@ -108,15 +109,25 @@ class Loader implements Contract
         return new Module($this->container->make('module.activator'), Json::make($path));
     }
 
-    public function getByID(string $id): ModuleContract
-    {
-        return Arr::first($this->all(), function (ModuleContract $module) use ($id) {
-            return $module->id() == $id;
-        });
-    }
-
     public function appendScanPath(string $path): void
     {
         $this->scanPaths[] = $path;
+    }
+
+    public function findModule(ModuleContract|string $module): ModuleContract
+    {
+        if ($module instanceof ModuleContract) {
+            return $module;
+        }
+        return $this->getByID($module);
+    }
+
+    public function getByID(string $id): ModuleContract
+    {
+        $module = Arr::first($this->all(), function (ModuleContract $module) use ($id) {
+            return $module->id() == $id;
+        });
+        throw_if(!$module, ModuleNotFound::fromID($id));
+        return $module;
     }
 }

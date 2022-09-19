@@ -5,6 +5,7 @@ namespace DNT\LaravelModule\Support;
 use DNT\Json\Json;
 use DNT\LaravelModule\Activator\JsonActivator;
 use DNT\LaravelModule\Contracts\Module as ModuleContract;
+use DNT\LaravelModule\Contracts\ModuleLoader;
 use DNT\LaravelModule\Enums\ModuleStatus;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Manager;
@@ -30,6 +31,7 @@ class ActivatorManager extends Manager
     public function createJsonDriver()
     {
         return new JsonActivator(
+            $this->container->make(ModuleLoader::class),
             Json::make($this->getConfig('driver.json.status_file', App::storagePath('module_status.json')), true)
         );
     }
